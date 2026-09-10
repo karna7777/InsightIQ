@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
+
+# Local secrets & config — never commit real .env files
+.env
+.env.local
+.env.bak*
+*.env.bak*
+# Commit the example templates (negations must follow the ignores)
+!**/.env.example
+!**/.env.local.example
+
+# Local data — uploaded rows live here and must never be committed
+backend/data/
+*.duckdb
+*.duckdb.wal
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+
+# AI assistant config (not project code)
+AGENTS.md
+CLAUDE.md
+
+# TypeScript build cache
+tsconfig.tsbuildinfo
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+Thumbs.db

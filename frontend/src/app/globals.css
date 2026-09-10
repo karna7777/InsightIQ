@@ -1,0 +1,207 @@
+@import "tailwindcss";
+
+/*
+  Design tokens. Values come from the validated data-viz palette (light + dark
+  are each a deliberately-stepped set, not an auto-flip). App chrome and chart
+  ("viz") tokens live together so a single scope swap re-themes everything.
+*/
+:root {
+  color-scheme: light;
+
+  /* app chrome */
+  --background: #f9f9f7;          /* page plane */
+  --foreground: #0b0b0b;          /* primary ink */
+  --card: #fcfcfb;                /* card / chart surface */
+  --card-foreground: #0b0b0b;
+  --secondary-foreground: #52514e;
+  --muted-foreground: #898781;
+  --border: rgba(11, 11, 11, 0.10);
+  --primary: #2a78d6;             /* accent = series-1 blue */
+  --primary-foreground: #ffffff;
+  --radius: 0.875rem;
+
+  /* elevation — soft, low-opacity, editorial (not material). warm-tinted in light. */
+  --shadow-sm: 0 1px 2px rgba(11, 11, 11, 0.04), 0 1px 3px rgba(11, 11, 11, 0.05);
+  --shadow-md: 0 2px 4px rgba(11, 11, 11, 0.04), 0 8px 20px -6px rgba(11, 11, 11, 0.10);
+  --shadow-lg: 0 4px 8px rgba(11, 11, 11, 0.05), 0 24px 48px -12px rgba(11, 11, 11, 0.16);
+
+  /* motion */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* chart tokens */
+  --viz-surface: #fcfcfb;
+  --viz-series: #2a78d6;          /* categorical slot 1, light */
+  --viz-grid: #e1e0d9;            /* hairline gridline */
+  --viz-axis: #c3c2b7;            /* baseline / axis */
+  --viz-muted: #898781;           /* axis labels */
+  --viz-good: #006300;            /* delta up / success text */
+
+  /* semantic grades (impact / confidence / severity) — separate from accent */
+  --sem-good: #1a7a44;            /* high confidence / positive */
+  --sem-good-bg: rgba(26, 122, 68, 0.10);
+  --sem-warn: #a8620c;            /* medium */
+  --sem-warn-bg: rgba(168, 98, 12, 0.10);
+  --sem-crit: #b5341f;            /* high impact / attention */
+  --sem-crit-bg: rgba(181, 52, 31, 0.10);
+  --sem-muted: #7a7873;           /* low */
+  --sem-muted-bg: rgba(122, 120, 115, 0.10);
+  --viz-forecast: #8a7fd6;        /* forecast series (distinct from actual) */
+  --viz-band: rgba(138, 127, 214, 0.16); /* prediction-interval band */
+}
+
+/* Dark: same hues, stepped for the dark surface. Applies via OS setting… */
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    color-scheme: dark;
+    --background: #0d0d0d;
+    --foreground: #ffffff;
+    --card: #1a1a19;
+    --card-foreground: #ffffff;
+    --secondary-foreground: #c3c2b7;
+    --muted-foreground: #898781;
+    --border: rgba(255, 255, 255, 0.10);
+    --primary: #3987e5;
+    --primary-foreground: #0b0b0b;
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.30), 0 1px 3px rgba(0, 0, 0, 0.35);
+    --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.35), 0 10px 24px -6px rgba(0, 0, 0, 0.50);
+    --shadow-lg: 0 6px 16px rgba(0, 0, 0, 0.40), 0 28px 56px -12px rgba(0, 0, 0, 0.60);
+
+    --viz-surface: #1a1a19;
+    --viz-series: #3987e5;        /* categorical slot 1, dark */
+    --viz-grid: #2c2c2a;
+    --viz-axis: #383835;
+    --viz-muted: #898781;
+    --viz-good: #0ca30c;
+
+    --sem-good: #4bbd7e;
+    --sem-good-bg: rgba(75, 189, 126, 0.14);
+    --sem-warn: #e0a544;
+    --sem-warn-bg: rgba(224, 165, 68, 0.14);
+    --sem-crit: #e56a58;
+    --sem-crit-bg: rgba(229, 106, 88, 0.14);
+    --sem-muted: #9a988f;
+    --sem-muted-bg: rgba(154, 152, 143, 0.14);
+    --viz-forecast: #a99cf0;
+    --viz-band: rgba(169, 156, 240, 0.18);
+  }
+}
+
+/* …and via the explicit toggle, which must win in both directions. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --background: #0d0d0d;
+  --foreground: #ffffff;
+  --card: #1a1a19;
+  --card-foreground: #ffffff;
+  --secondary-foreground: #c3c2b7;
+  --muted-foreground: #898781;
+  --border: rgba(255, 255, 255, 0.10);
+  --primary: #3987e5;
+  --primary-foreground: #0b0b0b;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.30), 0 1px 3px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.35), 0 10px 24px -6px rgba(0, 0, 0, 0.50);
+  --shadow-lg: 0 6px 16px rgba(0, 0, 0, 0.40), 0 28px 56px -12px rgba(0, 0, 0, 0.60);
+
+  --viz-surface: #1a1a19;
+  --viz-series: #3987e5;
+  --viz-grid: #2c2c2a;
+  --viz-axis: #383835;
+  --viz-muted: #898781;
+  --viz-good: #0ca30c;
+
+  --sem-good: #4bbd7e;
+  --sem-good-bg: rgba(75, 189, 126, 0.14);
+  --sem-warn: #e0a544;
+  --sem-warn-bg: rgba(224, 165, 68, 0.14);
+  --sem-crit: #e56a58;
+  --sem-crit-bg: rgba(229, 106, 88, 0.14);
+  --sem-muted: #9a988f;
+  --sem-muted-bg: rgba(154, 152, 143, 0.14);
+  --viz-forecast: #a99cf0;
+  --viz-band: rgba(169, 156, 240, 0.18);
+}
+
+/* Expose tokens to Tailwind utilities (bg-card, text-muted-foreground, …). */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --radius-lg: var(--radius);
+  /* --font-inter / --font-fraunces are set on <html> by next/font; compose with fallbacks */
+  --font-sans: var(--font-inter), system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-inter), system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/*
+  Editorial headings: the serif display face, tightened tracking and leading, and
+  balanced wrapping so multi-line headlines break gracefully. Components still set
+  their own size/weight — this only establishes family + rhythm globally.
+*/
+h1, h2, h3 {
+  font-family: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  letter-spacing: -0.015em;
+  line-height: 1.08;
+  text-wrap: balance;
+}
+
+/* Opt-out for headings that must stay in the sans (e.g. a data label in an h-tag). */
+.not-display {
+  font-family: var(--font-inter), system-ui, -apple-system, "Segoe UI", sans-serif;
+  letter-spacing: normal;
+}
+
+/*
+  Scroll reveal — a single soft rise as elements enter the viewport, driven by
+  useReveal (IntersectionObserver). Mirrors the Story Mode motion language. The
+  element starts hidden and is revealed by adding [data-revealed]; if JS/observer
+  never runs we fail open so content is never stuck invisible.
+*/
+@keyframes reveal-in {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: none; }
+}
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  will-change: opacity, transform;
+}
+.reveal[data-revealed="true"] {
+  animation: reveal-in 0.7s var(--ease-out) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; }
+  .reveal[data-revealed="true"] { animation: none; }
+}
+
+/*
+  Story Mode: each slide's content re-animates on navigation. Keep it to a
+  single soft rise so the presentation feels composed, not busy — and disable
+  it entirely for viewers who prefer reduced motion.
+*/
+@keyframes story-in {
+  from { opacity: 0; transform: translateY(20px) scale(0.985); filter: blur(4px); }
+  to { opacity: 1; transform: none; filter: blur(0); }
+}
+.story-in { animation: story-in 0.6s var(--ease-out) both; }
+@media (prefers-reduced-motion: reduce) {
+  .story-in { animation: none; }
+}
