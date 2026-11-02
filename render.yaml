@@ -1,0 +1,28 @@
+# Render Blueprint for the InsightIQ backend (FastAPI + DuckDB).
+# In Render: New + -> Blueprint -> pick this repo. Render reads this file and
+# provisions the service below. Set GROQ_API_KEY and INSIGHTIQ_CORS_ORIGINS in
+# the dashboard (they're marked sync:false so they aren't stored in git).
+#
+# Free tier note: the free plan has no persistent disk, so the DuckDB file is
+# ephemeral — the bundled demo datasets re-seed on every boot (good), but
+# visitor uploads reset when the service restarts or spins down after idle.
+# To keep uploads, upgrade the plan and attach a disk (see DEPLOY.md).
+services:
+  - type: web
+    name: insightiq-backend
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.7"
+      # Your Groq API key — set in the Render dashboard (kept out of git).
+      - key: GROQ_API_KEY
+        sync: false
+      # Set to your Vercel URL(s) after the frontend is deployed, e.g.
+      # https://insightiq.vercel.app  (comma-separate multiple origins).
+      - key: INSIGHTIQ_CORS_ORIGINS
+        sync: false
