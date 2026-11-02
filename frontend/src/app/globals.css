@@ -1,207 +1,316 @@
 @import "tailwindcss";
 
 /*
-  Design tokens. Values come from the validated data-viz palette (light + dark
-  are each a deliberately-stepped set, not an auto-flip). App chrome and chart
-  ("viz") tokens live together so a single scope swap re-themes everything.
+  InsightIQ — editorial design system.
+  ------------------------------------------------------------------
+  Warm ivory plane, deep charcoal ink, a single restrained forest-green
+  accent. Light is the hero theme (:root); dark (:root[data-theme="dark"])
+  is a calm charcoal-green counterpart so the toggle still works.
+
+  Token NAMES are preserved so charts/badges keep reading --viz-* and
+  --sem-*, and app chrome keeps reading --card / --border / --primary.
+  Motion is 2D (SVG dash flow + CSS reveal) — no WebGL, no neon glow.
 */
+
 :root {
   color-scheme: light;
 
-  /* app chrome */
-  --background: #f9f9f7;          /* page plane */
-  --foreground: #0b0b0b;          /* primary ink */
-  --card: #fcfcfb;                /* card / chart surface */
-  --card-foreground: #0b0b0b;
-  --secondary-foreground: #52514e;
-  --muted-foreground: #898781;
-  --border: rgba(11, 11, 11, 0.10);
-  --primary: #2a78d6;             /* accent = series-1 blue */
+  /* ---- surfaces ---- */
+  --background: #f7f7f4;          /* warm ivory plane */
+  --background-2: #f0f1ec;        /* secondary band */
+  --foreground: #202321;          /* deep charcoal ink */
+  --card: #ffffff;                /* primary surface */
+  --card-2: #f3f4ef;              /* raised / inset surface */
+  --card-foreground: #202321;
+  --secondary-foreground: #3c413d;/* strong body copy */
+  --muted-foreground: #747a75;    /* muted labels / captions */
+  --border: #e6e8e2;              /* hairline */
+  --border-strong: #d7dad1;       /* emphasized edge */
+
+  /* ---- accent (forest green, used sparingly) ---- */
+  --primary: #28745b;
   --primary-foreground: #ffffff;
-  --radius: 0.875rem;
+  --primary-hover: #1f6450;
+  --accent-bg: #e6f0ea;           /* tint behind the accent */
+  --ring: #28745b;
 
-  /* elevation — soft, low-opacity, editorial (not material). warm-tinted in light. */
-  --shadow-sm: 0 1px 2px rgba(11, 11, 11, 0.04), 0 1px 3px rgba(11, 11, 11, 0.05);
-  --shadow-md: 0 2px 4px rgba(11, 11, 11, 0.04), 0 8px 20px -6px rgba(11, 11, 11, 0.10);
-  --shadow-lg: 0 4px 8px rgba(11, 11, 11, 0.05), 0 24px 48px -12px rgba(11, 11, 11, 0.16);
+  /* legacy accent slots, retuned to the editorial palette so any older
+     component that still references them stays on-theme (no neon). */
+  --accent-violet: #8a6ba8;
+  --accent-cyan: #4c7a6e;
+  --accent-blue: #3e6c8c;
 
-  /* motion */
+  --radius: 0.625rem;             /* 10px — restrained, not pill-round */
+
+  /* ---- elevation (soft, realistic) ---- */
+  --shadow-sm: 0 1px 2px rgba(32, 35, 33, 0.05), 0 1px 3px rgba(32, 35, 33, 0.04);
+  --shadow-md: 0 2px 4px rgba(32, 35, 33, 0.04), 0 12px 28px -14px rgba(32, 35, 33, 0.14);
+  --shadow-lg: 0 8px 24px -14px rgba(32, 35, 33, 0.1), 0 36px 64px -28px rgba(32, 35, 33, 0.18);
+
+  /* frosted panel (chrome / command bar) — subtle, not glassmorphism-heavy */
+  --glass: rgba(255, 255, 255, 0.72);
+  --glass-border: rgba(32, 35, 33, 0.08);
+
+  /* ---- motion ---- */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 
-  /* chart tokens */
-  --viz-surface: #fcfcfb;
-  --viz-series: #2a78d6;          /* categorical slot 1, light */
-  --viz-grid: #e1e0d9;            /* hairline gridline */
-  --viz-axis: #c3c2b7;            /* baseline / axis */
-  --viz-muted: #898781;           /* axis labels */
-  --viz-good: #006300;            /* delta up / success text */
+  /* ---- chart tokens ---- */
+  --viz-surface: #ffffff;
+  --viz-series: #28745b;          /* series 1 = forest */
+  --viz-grid: rgba(32, 35, 33, 0.07);
+  --viz-axis: rgba(32, 35, 33, 0.22);
+  --viz-muted: #747a75;
+  --viz-good: #28745b;
+  --viz-forecast: #3e6c8c;        /* forecast line = slate blue, distinct */
+  --viz-band: rgba(62, 108, 140, 0.12);
+  /* categorical series — muted, earthy, mutually distinct */
+  --viz-1: #28745b;               /* forest */
+  --viz-2: #c77d4a;               /* terracotta */
+  --viz-3: #3e6c8c;               /* slate blue */
+  --viz-4: #8a6ba8;               /* muted plum */
+  --viz-5: #b0872b;               /* ochre */
+  --viz-6: #4c7a6e;               /* deep teal-green */
 
-  /* semantic grades (impact / confidence / severity) — separate from accent */
-  --sem-good: #1a7a44;            /* high confidence / positive */
-  --sem-good-bg: rgba(26, 122, 68, 0.10);
-  --sem-warn: #a8620c;            /* medium */
-  --sem-warn-bg: rgba(168, 98, 12, 0.10);
-  --sem-crit: #b5341f;            /* high impact / attention */
-  --sem-crit-bg: rgba(181, 52, 31, 0.10);
-  --sem-muted: #7a7873;           /* low */
-  --sem-muted-bg: rgba(122, 120, 115, 0.10);
-  --viz-forecast: #8a7fd6;        /* forecast series (distinct from actual) */
-  --viz-band: rgba(138, 127, 214, 0.16); /* prediction-interval band */
+  /* ---- semantic grades ---- */
+  --sem-good: #28745b;
+  --sem-good-bg: rgba(40, 116, 91, 0.1);
+  --sem-warn: #b0872b;
+  --sem-warn-bg: rgba(176, 135, 43, 0.12);
+  --sem-crit: #b23a48;
+  --sem-crit-bg: rgba(178, 58, 72, 0.1);
+  --sem-muted: #747a75;
+  --sem-muted-bg: rgba(116, 122, 117, 0.1);
 }
 
-/* Dark: same hues, stepped for the dark surface. Applies via OS setting… */
-@media (prefers-color-scheme: dark) {
-  :root:where(:not([data-theme="light"])) {
-    color-scheme: dark;
-    --background: #0d0d0d;
-    --foreground: #ffffff;
-    --card: #1a1a19;
-    --card-foreground: #ffffff;
-    --secondary-foreground: #c3c2b7;
-    --muted-foreground: #898781;
-    --border: rgba(255, 255, 255, 0.10);
-    --primary: #3987e5;
-    --primary-foreground: #0b0b0b;
-
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.30), 0 1px 3px rgba(0, 0, 0, 0.35);
-    --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.35), 0 10px 24px -6px rgba(0, 0, 0, 0.50);
-    --shadow-lg: 0 6px 16px rgba(0, 0, 0, 0.40), 0 28px 56px -12px rgba(0, 0, 0, 0.60);
-
-    --viz-surface: #1a1a19;
-    --viz-series: #3987e5;        /* categorical slot 1, dark */
-    --viz-grid: #2c2c2a;
-    --viz-axis: #383835;
-    --viz-muted: #898781;
-    --viz-good: #0ca30c;
-
-    --sem-good: #4bbd7e;
-    --sem-good-bg: rgba(75, 189, 126, 0.14);
-    --sem-warn: #e0a544;
-    --sem-warn-bg: rgba(224, 165, 68, 0.14);
-    --sem-crit: #e56a58;
-    --sem-crit-bg: rgba(229, 106, 88, 0.14);
-    --sem-muted: #9a988f;
-    --sem-muted-bg: rgba(154, 152, 143, 0.14);
-    --viz-forecast: #a99cf0;
-    --viz-band: rgba(169, 156, 240, 0.18);
-  }
-}
-
-/* …and via the explicit toggle, which must win in both directions. */
+/* Dark counterpart — charcoal-green, calm, never neon. */
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --background: #0d0d0d;
-  --foreground: #ffffff;
-  --card: #1a1a19;
-  --card-foreground: #ffffff;
-  --secondary-foreground: #c3c2b7;
-  --muted-foreground: #898781;
-  --border: rgba(255, 255, 255, 0.10);
-  --primary: #3987e5;
-  --primary-foreground: #0b0b0b;
+  --background: #121614;
+  --background-2: #171c1a;
+  --foreground: #f4f5f1;
+  --card: #1b211e;
+  --card-2: #232a26;
+  --card-foreground: #f4f5f1;
+  --secondary-foreground: #cdd2cc;
+  --muted-foreground: #8e948d;
+  --border: rgba(244, 245, 241, 0.1);
+  --border-strong: rgba(244, 245, 241, 0.17);
 
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.30), 0 1px 3px rgba(0, 0, 0, 0.35);
-  --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.35), 0 10px 24px -6px rgba(0, 0, 0, 0.50);
-  --shadow-lg: 0 6px 16px rgba(0, 0, 0, 0.40), 0 28px 56px -12px rgba(0, 0, 0, 0.60);
+  --primary: #4fa883;
+  --primary-foreground: #08130d;
+  --primary-hover: #5bb892;
+  --accent-bg: rgba(79, 168, 131, 0.14);
+  --ring: #4fa883;
 
-  --viz-surface: #1a1a19;
-  --viz-series: #3987e5;
-  --viz-grid: #2c2c2a;
-  --viz-axis: #383835;
-  --viz-muted: #898781;
-  --viz-good: #0ca30c;
+  --accent-violet: #a88cc4;
+  --accent-cyan: #6fae9e;
+  --accent-blue: #6f9cbe;
 
-  --sem-good: #4bbd7e;
-  --sem-good-bg: rgba(75, 189, 126, 0.14);
-  --sem-warn: #e0a544;
-  --sem-warn-bg: rgba(224, 165, 68, 0.14);
-  --sem-crit: #e56a58;
-  --sem-crit-bg: rgba(229, 106, 88, 0.14);
-  --sem-muted: #9a988f;
-  --sem-muted-bg: rgba(154, 152, 143, 0.14);
-  --viz-forecast: #a99cf0;
-  --viz-band: rgba(169, 156, 240, 0.18);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 10px 30px -14px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 30px 70px -28px rgba(0, 0, 0, 0.72);
+
+  --glass: rgba(27, 33, 30, 0.72);
+  --glass-border: rgba(244, 245, 241, 0.08);
+
+  --viz-surface: #1b211e;
+  --viz-series: #4fa883;
+  --viz-grid: rgba(244, 245, 241, 0.07);
+  --viz-axis: rgba(244, 245, 241, 0.2);
+  --viz-muted: #8e948d;
+  --viz-good: #4fa883;
+  --viz-forecast: #7aa7cc;
+  --viz-band: rgba(122, 167, 204, 0.16);
+  --viz-1: #4fa883;
+  --viz-2: #d8995f;
+  --viz-3: #7aa7cc;
+  --viz-4: #a88cc4;
+  --viz-5: #cda94a;
+  --viz-6: #6fae9e;
+
+  --sem-good: #4fa883;
+  --sem-good-bg: rgba(79, 168, 131, 0.14);
+  --sem-warn: #cda94a;
+  --sem-warn-bg: rgba(205, 169, 74, 0.14);
+  --sem-crit: #de6b78;
+  --sem-crit-bg: rgba(222, 107, 120, 0.14);
+  --sem-muted: #8e948d;
+  --sem-muted-bg: rgba(142, 148, 141, 0.14);
 }
 
 /* Expose tokens to Tailwind utilities (bg-card, text-muted-foreground, …). */
 @theme inline {
   --color-background: var(--background);
+  --color-background-2: var(--background-2);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
+  --color-card-2: var(--card-2);
   --color-card-foreground: var(--card-foreground);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted-foreground: var(--muted-foreground);
   --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+  --color-accent-bg: var(--accent-bg);
+  --color-accent-violet: var(--accent-violet);
+  --color-accent-cyan: var(--accent-cyan);
+  --color-accent-blue: var(--accent-blue);
+  --color-ring: var(--ring);
   --radius-lg: var(--radius);
-  /* --font-inter / --font-fraunces are set on <html> by next/font; compose with fallbacks */
+
   --font-sans: var(--font-inter), system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, "SFMono-Regular", monospace;
+
   --shadow-sm: var(--shadow-sm);
   --shadow-md: var(--shadow-md);
   --shadow-lg: var(--shadow-lg);
 }
 
+/*
+  Body plane. Ivory with a whisper of warmth top-corner — no animated washes,
+  no aurora. Data and type stay the brightest things on screen.
+*/
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: var(--font-inter), system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
-/*
-  Editorial headings: the serif display face, tightened tracking and leading, and
-  balanced wrapping so multi-line headlines break gracefully. Components still set
-  their own size/weight — this only establishes family + rhythm globally.
-*/
+/* Editorial display: warm serif, near-neutral tracking, tight leading. */
 h1, h2, h3 {
-  font-family: var(--font-fraunces), Georgia, "Times New Roman", serif;
-  letter-spacing: -0.015em;
+  font-family: var(--font-display);
+  letter-spacing: -0.012em;
   line-height: 1.08;
   text-wrap: balance;
+  font-weight: 560;
 }
-
-/* Opt-out for headings that must stay in the sans (e.g. a data label in an h-tag). */
 .not-display {
-  font-family: var(--font-inter), system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-family: var(--font-sans);
   letter-spacing: normal;
+  font-weight: inherit;
+}
+.font-display { font-family: var(--font-display); }
+.font-mono { font-family: var(--font-mono); }
+
+/* Eyebrow / kicker: small mono caps — a quiet editorial/technical signal. */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
 }
 
-/*
-  Scroll reveal — a single soft rise as elements enter the viewport, driven by
-  useReveal (IntersectionObserver). Mirrors the Story Mode motion language. The
-  element starts hidden and is revealed by adding [data-revealed]; if JS/observer
-  never runs we fail open so content is never stuck invisible.
-*/
+/* ---- reusable surface + effect utilities ---- */
+
+/* Frosted chrome — light touch of blur, hairline edge. */
+.glass {
+  background-color: var(--glass);
+  backdrop-filter: blur(12px) saturate(120%);
+  -webkit-backdrop-filter: blur(12px) saturate(120%);
+  border: 1px solid var(--glass-border);
+}
+
+/* Restrained forest→teal text accent, used only on small marks. */
+.text-gradient {
+  background: linear-gradient(100deg, var(--primary), var(--accent-cyan));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Faint ruled grid for empty states / hero backdrops. */
+.grid-bg {
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 30px 30px;
+  -webkit-mask-image: radial-gradient(ellipse 78% 78% at 50% 40%, #000 28%, transparent 76%);
+  mask-image: radial-gradient(ellipse 78% 78% at 50% 40%, #000 28%, transparent 76%);
+}
+
+/* ---- custom scrollbars (thin, on-theme) ---- */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+*::-webkit-scrollbar { width: 10px; height: 10px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border: 3px solid transparent;
+  background-clip: content-box;
+  border-radius: 99px;
+}
+*::-webkit-scrollbar-thumb:hover { background: var(--muted-foreground); background-clip: content-box; }
+
+/* ---- scroll reveal (one-shot rise on enter; reduced-motion opt-out) ---- */
 @keyframes reveal-in {
   from { opacity: 0; transform: translateY(16px); }
   to { opacity: 1; transform: none; }
 }
-.reveal {
-  opacity: 0;
-  transform: translateY(16px);
-  will-change: opacity, transform;
+.reveal { opacity: 0; transform: translateY(16px); will-change: opacity, transform; }
+.reveal[data-revealed="true"] { animation: reveal-in 0.7s var(--ease-out) both; }
+
+/* ---- story mode slide transition ---- */
+@keyframes story-in {
+  from { opacity: 0; transform: translateY(18px) scale(0.99); }
+  to { opacity: 1; transform: none; }
 }
-.reveal[data-revealed="true"] {
-  animation: reveal-in 0.7s var(--ease-out) both;
+.story-in { animation: story-in 0.55s var(--ease-out) both; }
+
+/* ---- shimmer for loading skeletons ---- */
+@keyframes shimmer { 100% { transform: translateX(100%); } }
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--card-2);
 }
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(32, 35, 33, 0.05), transparent);
+  animation: shimmer 1.6s infinite;
+}
+:root[data-theme="dark"] .skeleton::after {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.06), transparent);
+}
+
+/* ---- 2D data-flow: dashes travelling along SVG analytic paths ---- */
+@keyframes flow-dash { to { stroke-dashoffset: -1000; } }
+.flow-line {
+  stroke-dasharray: 5 9;
+  animation: flow-dash 9s linear infinite;
+}
+.flow-line--slow { animation-duration: 16s; }
+.flow-line--fast { animation-duration: 6s; }
+
+/* Progressive draw of a path (used for chart lines / diagrams). */
+@keyframes draw-in { to { stroke-dashoffset: 0; } }
+
+/* Marquee for a quiet capability strip. */
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.marquee-track { display: flex; width: max-content; animation: marquee 40s linear infinite; }
+.marquee:hover .marquee-track { animation-play-state: paused; }
+
+/* 3D tilt helpers for subtle card depth. */
+.perspective { perspective: 1400px; }
+.preserve-3d { transform-style: preserve-3d; }
+
 @media (prefers-reduced-motion: reduce) {
   .reveal { opacity: 1; transform: none; }
   .reveal[data-revealed="true"] { animation: none; }
+  .story-in { animation: none; }
+  .skeleton::after { animation: none; }
+  .flow-line, .flow-line--slow, .flow-line--fast { animation: none; }
+  .marquee-track { animation: none; }
+  html { scroll-behavior: auto; }
 }
 
-/*
-  Story Mode: each slide's content re-animates on navigation. Keep it to a
-  single soft rise so the presentation feels composed, not busy — and disable
-  it entirely for viewers who prefer reduced motion.
-*/
-@keyframes story-in {
-  from { opacity: 0; transform: translateY(20px) scale(0.985); filter: blur(4px); }
-  to { opacity: 1; transform: none; filter: blur(0); }
-}
-.story-in { animation: story-in 0.6s var(--ease-out) both; }
-@media (prefers-reduced-motion: reduce) {
-  .story-in { animation: none; }
-}
+html { scroll-behavior: smooth; }

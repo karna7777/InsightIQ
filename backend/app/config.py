@@ -9,6 +9,7 @@ Env vars:
   INSIGHTIQ_DB_PATH        path to the DuckDB file (default: backend/data/insightiq.duckdb)
   INSIGHTIQ_PORT           server port (default: 8000)
   INSIGHTIQ_CORS_ORIGINS   comma-separated allowed origins (default: http://localhost:3000)
+  INSIGHTIQ_SEED_DEMO      load bundled demo datasets on startup (default: true)
   GROQ_API_KEY             Groq API key (unused until step 3; default: empty)
 """
 
@@ -34,6 +35,10 @@ class Settings(BaseSettings):
     db_path: str = Field(default=str(BACKEND_DIR / "data" / "insightiq.duckdb"))
     port: int = 8000
     cors_origins: str = "http://localhost:3000"
+
+    # Load the bundled demo datasets on startup so a fresh deploy's library
+    # isn't empty for first-time visitors. Idempotent; set false to disable.
+    seed_demo: bool = True
 
     # GROQ_API_KEY has no INSIGHTIQ_ prefix, so bind it explicitly.
     groq_api_key: str = Field(default="", validation_alias="GROQ_API_KEY")

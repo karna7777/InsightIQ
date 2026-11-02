@@ -1,21 +1,39 @@
-import { Card } from "@/components/ui/card";
-import { formatKpi } from "@/lib/utils";
+import { cn, formatKpi } from "@/lib/utils";
 import type { KpiCard as KpiCardData } from "@/lib/types";
 
 /**
  * A stat tile: the label sits above a hero number. No plot, so no hover layer
  * (per the dataviz form guidance — a bare stat tile is the one form that skips
- * interactivity). Hero figure uses proportional figures in the system sans.
+ * interactivity). `featured` gives the headline figure a gradient edge + aura.
  */
-export function KpiCard({ kpi }: { kpi: KpiCardData }) {
+export function KpiCard({
+  kpi,
+  featured = false,
+}: {
+  kpi: KpiCardData;
+  featured?: boolean;
+}) {
   return (
-    <Card className="p-5">
-      <div className="truncate text-[0.7rem] font-medium uppercase tracking-[0.08em] text-muted-foreground">
+    <div
+      className={cn(
+        "relative overflow-hidden rounded-[var(--radius)] border bg-card p-5 shadow-[var(--shadow-sm)]",
+        featured ? "border-primary/35 bg-[var(--accent-bg)]" : "border-border",
+      )}
+    >
+      {featured && (
+        <span aria-hidden className="absolute inset-y-0 left-0 w-[3px] bg-primary" />
+      )}
+      <div className="truncate font-mono text-[0.68rem] font-medium uppercase tracking-[0.12em] text-muted-foreground">
         {kpi.label}
       </div>
-      <div className="mt-2.5 text-3xl font-semibold tracking-tight tabular-nums">
+      <div
+        className={cn(
+          "mt-2.5 font-display text-[1.9rem] font-semibold leading-none tabular-nums",
+          featured ? "text-primary" : "text-foreground",
+        )}
+      >
         {formatKpi(kpi.value, kpi.format)}
       </div>
-    </Card>
+    </div>
   );
 }

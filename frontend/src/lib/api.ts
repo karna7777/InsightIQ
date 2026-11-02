@@ -1,10 +1,12 @@
 import type {
   ChatResponse,
   Dashboard,
+  DatasetSummary,
   DecisionReport,
   ForecastReport,
   InsightReport,
   InvestigationReport,
+  Profile,
   UploadResponse,
 } from "./types";
 
@@ -31,6 +33,20 @@ export async function uploadDataset(file: File): Promise<UploadResponse> {
     method: "POST",
     body: form,
   });
+  if (!res.ok) throw new Error(await parseError(res));
+  return res.json();
+}
+
+/** List every uploaded dataset (most recent first). */
+export async function listDatasets(): Promise<DatasetSummary[]> {
+  const res = await fetch(`${API_BASE}/api/datasets`);
+  if (!res.ok) throw new Error(await parseError(res));
+  return res.json();
+}
+
+/** Fetch a dataset's schema profile (columns, roles, stats). */
+export async function getProfile(datasetId: string): Promise<Profile> {
+  const res = await fetch(`${API_BASE}/api/datasets/${datasetId}`);
   if (!res.ok) throw new Error(await parseError(res));
   return res.json();
 }

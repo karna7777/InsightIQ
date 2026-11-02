@@ -46,6 +46,13 @@ export interface UploadResponse {
   ingest_report: IngestReport;
 }
 
+export interface DatasetSummary {
+  id: string;
+  filename: string;
+  row_count: number;
+  uploaded_at: string;
+}
+
 export interface KpiCard {
   label: string;
   value: number | null;

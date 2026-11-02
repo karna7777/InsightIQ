@@ -16,6 +16,7 @@ from .ai import GroqClient
 from .api import chat, datasets, decisions, forecast, insights, investigate
 from .config import get_settings
 from .db import Database
+from .seed import seed_demo_datasets
 from .storage import DuckDBMetadataStore
 
 
@@ -28,6 +29,10 @@ async def lifespan(app: FastAPI):
     app.state.store = DuckDBMetadataStore(db)
     # Groq client (lazy — no network until a chat request; no key needed to boot).
     app.state.groq = GroqClient(settings)
+    # Give a fresh deploy something to explore: load bundled demo datasets
+    # (idempotent; never fatal to boot).
+    if settings.seed_demo:
+        seed_demo_datasets(db, app.state.store)
     try:
         yield
     finally:

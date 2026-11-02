@@ -6,11 +6,11 @@ import { Button } from "@/components/ui/button";
 
 type Theme = "light" | "dark";
 
-/** Resolve the currently-effective theme (explicit override or OS preference). */
+/** Resolve the currently-effective theme. Light is the default when nothing is set. */
 function currentTheme(): Theme {
   const attr = document.documentElement.getAttribute("data-theme");
   if (attr === "light" || attr === "dark") return attr;
-  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  return "light";
 }
 
 export function ThemeToggle() {
@@ -26,7 +26,7 @@ export function ThemeToggle() {
     const next: Theme = theme === "dark" ? "light" : "dark";
     document.documentElement.setAttribute("data-theme", next);
     try {
-      localStorage.setItem("theme", next);
+      localStorage.setItem("iq:theme", next);
     } catch {}
     setTheme(next);
   }

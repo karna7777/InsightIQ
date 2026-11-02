@@ -29,6 +29,7 @@ out/
 # AI assistant config (not project code)
 AGENTS.md
 CLAUDE.md
+.claude/
 
 # TypeScript build cache
 tsconfig.tsbuildinfo
